@@ -26,8 +26,16 @@
 import { defineComponent, reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { validators } from "@/modules/validations";
 import { auth } from "@/settings/firebase";
 import getUserName from "@/composables/get-username";
+
+interface FormSchema {
+  [key: string]: string;
+  name: string;
+  email: string;
+  password: string;
+}
 
 interface State {
   newUserName: string;
@@ -36,6 +44,23 @@ interface State {
   errorMessage: string;
   loggedIn: boolean;
 }
+
+const validateForm = (values: FormSchema): boolean => {
+  // フォーム項目と適用するバリデーションを並べる.
+  let validationSchema = [
+    { prop: "name", type: "required" },
+    { prop: "email", type: "required" },
+    { prop: "email", type: "email" },
+    { prop: "password", type: "required" },
+  ];
+
+  let result = true;
+  for (const schema of validationSchema) {
+    // 一つでもfalseになればresultはfalseになる
+    result &&= validators[schema.type](values[schema.prop]);
+  }
+  return result;
+};
 
 export default defineComponent({
   setup() {
@@ -55,6 +80,18 @@ export default defineComponent({
     });
 
     const registerUser = () => {
+      const formValues: FormSchema = {
+        name: state.newUserName,
+        email: state.newUserEmail,
+        password: state.newUserPassword,
+      };
+      if (!validateForm(formValues)) {
+        // 引っかかったら終了させる
+        state.errorMessage = "間違いがあります。";
+        return;
+      } else {
+        state.errorMessage = "";
+      }
       createUserWithEmailAndPassword(
         auth,
         state.newUserEmail,
@@ -75,7 +112,7 @@ export default defineComponent({
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          state.errorMessage = `${errorCode}:${errorMessage}`;
+          state.errorMessage = `登録処理中に何らかの問題が発生しました。\n${errorCode}:${errorMessage}`;
         });
     };
 
