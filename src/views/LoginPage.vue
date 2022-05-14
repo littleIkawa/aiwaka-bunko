@@ -2,7 +2,7 @@
   <div class="login-page">
     <template v-if="!state.loggedIn">
       <div class="login-form">
-        <h2>ログイン</h2>
+        <h1>ログイン</h1>
         <label>e-mail</label>：<input
           placeholder="name"
           v-model="state.userEmail"
@@ -21,7 +21,7 @@
     </template>
 
     <template v-else>
-      <h2>ログアウト</h2>
+      <h1>ログアウト</h1>
       <div class="login-name-display">
         {{ state.loginUserName }}としてログインしています。
       </div>
