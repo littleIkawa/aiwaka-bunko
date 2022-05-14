@@ -1,5 +1,7 @@
 <template>
-  <div class="contents-home"></div>
+  <div class="contents-home">
+    <h1>コンテンツ一覧</h1>
+  </div>
 </template>
 
 <script lang="ts">
