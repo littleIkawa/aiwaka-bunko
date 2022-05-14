@@ -25,7 +25,7 @@ export default defineComponent({
 .document-item {
   border: 1px solid #777777;
   border-radius: 7px;
-  backdrop-filter: blur(1rem);
+  backdrop-filter: blur(1.5rem);
   margin: 2rem 1.6rem;
   padding: 1.5rem 2.4rem;
   &:first-child {
@@ -33,7 +33,7 @@ export default defineComponent({
   }
   &:hover {
     backdrop-filter: blur(0);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
   }
 }
 </style>
