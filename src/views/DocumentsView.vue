@@ -16,30 +16,29 @@
         </ul>
       </template>
       <h2>ダウンロード</h2>
-      <button class="download-button">ダウンロード</button>
+      <button class="download-button" @click="openFileAsNewTab($props.urlStr)">
+        新しいタブで開く
+      </button>
+      <button class="download-button" @click="downloadDocument($props.urlStr)">
+        ダウンロード
+      </button>
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, toRefs, Ref, reactive } from "vue";
+import { defineComponent, onMounted, toRefs, reactive } from "vue";
 
 import { DocumentContent } from "@/modules/document-content";
 import { getOneContent } from "@/composables/get-contents";
+import {
+  downloadDocument,
+  openFileAsNewTab,
+} from "@/composables/download-file";
 
 interface State {
   documentItem: DocumentContent | null;
 }
-
-const fetchArticle = (
-  valueRef: Ref<DocumentContent | null>,
-  urlStr: string
-): (() => Promise<void>) => {
-  return async () => {
-    const item = await getOneContent(urlStr);
-    valueRef.value = item;
-  };
-};
 
 export default defineComponent({
   props: {
@@ -48,11 +47,16 @@ export default defineComponent({
       required: true,
     },
   },
+
   setup(props) {
     const { documentItem } = toRefs(reactive<State>({ documentItem: null }));
-    onMounted(fetchArticle(documentItem, props.urlStr));
+    onMounted(async () => {
+      // 文書情報を取得
+      const item = await getOneContent(props.urlStr);
+      documentItem.value = item;
+    });
 
-    return { documentItem };
+    return { documentItem, downloadDocument, openFileAsNewTab };
   },
 });
 </script>
