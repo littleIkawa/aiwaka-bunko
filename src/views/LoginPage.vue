@@ -1,23 +1,33 @@
 <template>
   <div class="login-page">
-    <div v-if="!state.loggedIn" class="login-form">
-      <label>e-mail</label>：<input
-        placeholder="name"
-        v-model="state.userEmail"
-      />
-      <label>password</label>：<input
-        placeholder="password"
-        type="password"
-        v-model="state.password"
-      />
-      <button @click="login">Login</button>
-    </div>
-    <div v-else>
+    <template v-if="!state.loggedIn">
+      <div class="login-form">
+        <h2>ログイン</h2>
+        <label>e-mail</label>：<input
+          placeholder="name"
+          v-model="state.userEmail"
+        />
+        <label>password</label>：<input
+          placeholder="password"
+          type="password"
+          v-model="state.password"
+        />
+        <button @click="login">Login</button>
+      </div>
+      <div>
+        登録していない方はこちらから登録してください→
+        <router-link to="/register">登録ページ</router-link>
+      </div>
+    </template>
+
+    <template v-else>
+      <h2>ログアウト</h2>
+      <div class="login-name-display">
+        {{ state.loginUserName }}としてログインしています。
+      </div>
       <button @click="logout">Logout</button>
-    </div>
-    <div v-if="state.loggedIn" class="login-name-display">
-      {{ state.loginUserName }}としてログインしています。
-    </div>
+    </template>
+
     <div v-if="state.errorMessage" class="error-msg">
       {{ state.errorMessage }}
     </div>
@@ -60,12 +70,8 @@ export default defineComponent({
     });
 
     const login = () => {
-      // eslint-disable-next-line no-console
-      // console.log("try to login");
       signInWithEmailAndPassword(auth, state.userEmail, state.password)
         .then(() => {
-          // .then((userCredential) => {
-          // const user = userCredential.user;
           if (route.query.redirect) {
             const redirect = route.query.redirect;
             if (typeof redirect === "string") {
