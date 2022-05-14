@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { getAuth, User } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -21,6 +22,7 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 const analytics = getAnalytics(firebaseApp);
 const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);
 const auth = getAuth(firebaseApp);
 
 // https://blog.35d.jp/2020-04-06-nuxt-firebase-auth
@@ -34,4 +36,4 @@ export function getCurrentUser(): Promise<User | null> {
   });
 }
 
-export { firebaseApp, analytics, db, auth };
+export { firebaseApp, analytics, db, storage, auth };
