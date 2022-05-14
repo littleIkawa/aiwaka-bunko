@@ -23,6 +23,17 @@ export default defineComponent({
 @import "@/assets/css/mixins.scss";
 
 #view-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+
+  @include mediaquery(small-size) {
+    flex-direction: column;
+    top: $header-height + 3rem;
+    margin-bottom: 12rem;
+  }
+
+  margin: 1rem 5%;
   margin: 1.2rem 3%;
 
   @include mediaquery(small-size) {

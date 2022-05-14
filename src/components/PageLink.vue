@@ -39,14 +39,14 @@ export default defineComponent({
   }
 
   &:hover {
-    color: rgb(0, 150, 255);
+    color: rgb(100, 200, 255);
   }
 
   &::before {
     content: "";
     width: 0;
     height: 0.2rem;
-    background: rgb(0, 150, 255);
+    background: rgb(100, 200, 255);
     position: absolute;
     left: 50%;
     bottom: 0;

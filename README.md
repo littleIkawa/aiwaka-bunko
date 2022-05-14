@@ -1,24 +1,26 @@
 # aiwaka-bunko
 
 ## Project setup
+
 ```
 npm install
 ```
 
+でセットアップ可能.
+
 ### Compiles and hot-reloads for development
+
 ```
 npm run serve
 ```
 
 ### Compiles and minifies for production
+
 ```
 npm run build
 ```
 
-### Lints and fixes files
-```
-npm run lint
-```
+## メモ
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- gsutil を用いた cors 設定を行っている.
+- gsutil を pip で入れた.

@@ -61,4 +61,16 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.download-button {
+  padding: 1rem 2rem;
+  border: 2px solid rgb(100, 200, 255);
+  border-radius: 12px;
+  transition: 0.25s ease-out;
+  &:hover {
+    color: #333333;
+    background-color: rgb(100, 200, 255);
+    border: 2px solid rgb(172, 255, 244);
+  }
+}
+</style>

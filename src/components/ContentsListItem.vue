@@ -26,8 +26,8 @@ export default defineComponent({
   border: 1px solid #777777;
   border-radius: 7px;
   backdrop-filter: blur(1.5rem);
-  margin: 2rem 1.6rem;
-  padding: 1.5rem 2.4rem;
+  margin: 1rem 1.6rem;
+  padding: 1rem 1.8rem;
   &:first-child {
     margin-top: 0;
   }
