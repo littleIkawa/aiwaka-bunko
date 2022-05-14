@@ -1,8 +1,8 @@
 <template>
   <site-header-vue />
-  <div id="view-container">
+  <section id="view-container">
     <router-view />
-  </div>
+  </section>
   <site-footer-vue />
 </template>
 
