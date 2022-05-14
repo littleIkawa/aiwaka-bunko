@@ -28,6 +28,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { validators } from "@/modules/validations";
 import { auth } from "@/settings/firebase";
 import getUserName from "@/composables/get-username";
+import { addUserRecord } from "@/composables/add-user-record";
 
 interface FormSchema {
   [key: string]: string;
@@ -110,6 +111,9 @@ export default defineComponent({
         .then((cred) => {
           // アカウント登録情報を使ってデータベースに情報を登録
           const uid = cred.user.uid;
+          addUserRecord(uid, state.newUserName, state.newUserBelongs);
+
+          // リダイレクトを行う
           if (route.query.redirect) {
             const redirect = route.query.redirect;
             if (typeof redirect === "string") {
