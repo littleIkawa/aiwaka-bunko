@@ -3,6 +3,7 @@ import { Timestamp } from "@firebase/firestore";
 export class DocumentContent {
   constructor(
     public urlStr: string,
+    public id: number,
     public title: string,
     public update: Timestamp,
     public description: string,

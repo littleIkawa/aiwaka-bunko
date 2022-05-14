@@ -5,6 +5,7 @@ export const documentConverter = {
   toFirestore: (document: DocumentContent) => {
     return {
       title: document.title,
+      id: document.id,
       update: document.update,
       description: document.description,
       notes: document.notes,
@@ -17,6 +18,7 @@ export const documentConverter = {
     const data = snapshot.data(options);
     return new DocumentContent(
       snapshot.id,
+      data.id,
       data.title,
       data.update,
       data.description,
