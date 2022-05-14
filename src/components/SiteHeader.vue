@@ -7,9 +7,9 @@
     </div>
     <nav>
       <div class="nav-link-wrapper">
-        <page-link-vue :link-name="'TOP'" :link-to="'/'" />
-        <page-link-vue :link-name="'CONTENTS'" :link-to="'/contents'" />
-        <page-link-vue :link-name="'LOGIN'" :link-to="'/login'" />
+        <page-link-vue :link-to="'/'">TOP</page-link-vue>
+        <page-link-vue :link-to="'/contents'">CONTENTS</page-link-vue>
+        <page-link-vue :link-to="'/login'">LOGIN/LOGOUT</page-link-vue>
       </div>
     </nav>
   </header>

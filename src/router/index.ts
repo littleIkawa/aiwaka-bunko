@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import { getCurrentUser } from "../settings/firebase";
+import { getCurrentUser } from "@/settings/firebase";
 import { setTitle, setDescription } from "@/composables/set-title-description";
 import Home from "../views/HomePage.vue";
 
@@ -41,6 +41,12 @@ const routes: Array<RouteRecordRaw> = [
       title: "Contents",
       desc: "コンテンツ一覧ページ",
     },
+  },
+  // 動的なコンテンツURL
+  {
+    path: "/contents/:urlStr",
+    component: () => import("../views/DocumentsView.vue"),
+    props: true,
   },
 ];
 

@@ -1,5 +1,5 @@
 export const setTitle = (pathTitle: string): void => {
-  const siteTitle = "Tako Board";
+  const siteTitle = "あいわか文庫";
   const pageTitle = !pathTitle ? siteTitle : `${pathTitle} | ${siteTitle}`;
   window.document.title = pageTitle;
 };

@@ -5,7 +5,7 @@
       exact-active-class="current-page"
       :to="linkTo"
     >
-      {{ linkName }}
+      <slot></slot>
     </router-link>
   </div>
 </template>
@@ -14,10 +14,6 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   props: {
-    linkName: {
-      type: String,
-      required: true,
-    },
     linkTo: {
       type: String,
       required: true,
