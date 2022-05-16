@@ -22,12 +22,59 @@
       <button class="download-button" @click="downloadDocument($props.urlStr)">
         ダウンロード
       </button>
+
+      <h2>リクエスト</h2>
+      <p>
+        文書の修正等を行いたい場合は、ここでリクエストを行ってください。
+        継続的に参加したい、または自分で修正を行いたい場合はGitHubリポジトリへの参加申請を行ってください。
+      </p>
+      <h3>追加</h3>
+      <p>
+        リクエスト内容を記入して追加してください。
+        メッセージは、GitHub参加依頼の場合は必要ありません。
+      </p>
+      <div class="add-request-form">
+        <fieldset class="add-request-form-field">
+          <label for="request-type"> タイプ </label>
+          <select id="request-type" name="type" v-model="newRequestType">
+            <option
+              v-for="(type, index) in requestTypeStr"
+              :key="type"
+              :value="index"
+            >
+              {{ type }}
+            </option>
+          </select>
+          <label for="request-message"> メッセージ </label>
+          <input
+            id="request-message"
+            type="text"
+            name="message"
+            placeholder="message"
+            v-model="newRequestMessage"
+          />
+          <button
+            class="add-button"
+            @click.prevent="addRequest"
+            :disabled="addButtonDisabled"
+          >
+            追加
+          </button>
+        </fieldset>
+      </div>
+      <h3>これまでのリクエスト一覧</h3>
+      <request-budge-vue
+        v-for="req in requestList"
+        :key="req.id"
+        :request="req"
+        @delete-record="deleteRequest"
+      />
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, toRefs, reactive } from "vue";
+import { defineComponent, onMounted, computed, toRefs, reactive } from "vue";
 
 import { DocumentContent } from "@/modules/document-content";
 import { getOneContent } from "@/composables/get-contents";
@@ -35,12 +82,22 @@ import {
   downloadDocument,
   openFileAsNewTab,
 } from "@/composables/download-file";
+import { DocumentRequest, requestTypeStr } from "@/modules/document-requests";
+import { getRequestByUserAndTarget } from "@/composables/get-request";
+import { createRequestToFirestore } from "@/composables/create-request-record";
+import { deleteRequestFromFirestore } from "@/composables/delete-request-record";
+import RequestBudgeVue from "@/components/RequestBudge.vue";
 
 interface State {
   documentItem: DocumentContent | null;
+  requestList: DocumentRequest[];
+  newRequestType: number;
+  newRequestMessage: string;
 }
 
 export default defineComponent({
+  components: { RequestBudgeVue },
+
   props: {
     urlStr: {
       type: String,
@@ -49,19 +106,71 @@ export default defineComponent({
   },
 
   setup(props) {
-    const { documentItem } = toRefs(reactive<State>({ documentItem: null }));
+    const { documentItem, requestList, newRequestType, newRequestMessage } =
+      toRefs(
+        reactive<State>({
+          documentItem: null,
+          requestList: [],
+          newRequestType: 0,
+          newRequestMessage: "",
+        })
+      );
     onMounted(async () => {
       // 文書情報を取得
       const item = await getOneContent(props.urlStr);
       documentItem.value = item;
+
+      // リクエスト情報を取得
+      await getRequestByUserAndTarget(requestList, props.urlStr);
     });
 
-    return { documentItem, downloadDocument, openFileAsNewTab };
+    const addButtonDisabled = computed(() => {
+      return newRequestType.value !== 2 && newRequestMessage.value === "";
+    });
+
+    const addRequest = async () => {
+      const addedRequest = await createRequestToFirestore(
+        newRequestType.value,
+        props.urlStr,
+        newRequestMessage.value
+      );
+      if (addedRequest) {
+        requestList.value.push(addedRequest);
+        newRequestType.value = 0;
+        newRequestMessage.value = "";
+      }
+    };
+    const deleteRequest = async (id: string) => {
+      if (confirm("削除しますか？")) {
+        await deleteRequestFromFirestore(id);
+        await reloadRequestList();
+      }
+    };
+
+    const reloadRequestList = async () => {
+      requestList.value = [];
+      await getRequestByUserAndTarget(requestList, props.urlStr);
+    };
+
+    return {
+      addButtonDisabled,
+      addRequest,
+      deleteRequest,
+      documentItem,
+      requestList,
+      newRequestType,
+      newRequestMessage,
+      requestTypeStr,
+      downloadDocument,
+      openFileAsNewTab,
+    };
   },
 });
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/css/mixins.scss";
+
 .download-button {
   padding: 1rem 2rem;
   border: 2px solid rgb(100, 200, 255);
@@ -71,6 +180,85 @@ export default defineComponent({
     color: #333333;
     background-color: rgb(100, 200, 255);
     border: 2px solid rgb(172, 255, 244);
+  }
+}
+
+// todo: このあたりの登録フォーム等を使いまわしているデザイン定義を他に移す
+// todo: そもそも重複しているロジックをmixin等に移す？
+fieldset.add-request-form-field {
+  $item-height: 2.8rem;
+
+  display: grid;
+  grid-template-rows: repeat(2, $item-height) 1fr;
+  grid-template-columns: 8rem 1fr;
+  row-gap: 2rem;
+  column-gap: 0.7rem;
+  width: 97%;
+  margin: 2rem auto;
+  padding: 1.6rem 2rem;
+
+  @include mediaquery(small-size) {
+    grid-template-rows: repeat(5, $item-height);
+    grid-template-columns: 1fr;
+    row-gap: 1.2rem;
+  }
+
+  label {
+    @include mediaquery(normal-size) {
+      grid-column-start: 1;
+    }
+    line-height: $item-height;
+    margin-right: 0.7rem;
+  }
+
+  input {
+    color: inherit;
+    background-color: transparent;
+    border: 1px solid #777777;
+    transition: ease-in-out 0.2s;
+
+    &:focus {
+      outline-width: 0;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(1.5rem);
+    }
+  }
+
+  select {
+    color: inherit;
+    background-color: transparent;
+    border: 1px solid #777777;
+    transition: ease-in-out 0.2s;
+
+    &:focus {
+      outline-width: 0;
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(1.5rem);
+    }
+  }
+
+  button {
+    grid-column-start: 2;
+    @include mediaquery(small-size) {
+      grid-column-start: 1;
+    }
+    width: fit-content;
+    height: 3rem;
+    justify-self: right;
+
+    padding: 0.2rem 0.7rem;
+    border: 2px solid #999;
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    &:hover,
+    &:focus {
+      outline: none;
+      background-color: rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(1.5rem);
+    }
   }
 }
 </style>
