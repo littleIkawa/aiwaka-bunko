@@ -9,6 +9,7 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db, getCurrentUser } from "@/settings/firebase";
 import { DocumentRequest } from "@/modules/document-requests";
@@ -108,6 +109,21 @@ export const getRequestByUserAndTarget = async (
       docData.status
     );
     requestList.value.push(newReq);
+  });
+};
+
+///////////////
+// update
+///////////////
+export const updateRequest = async (
+  requestId: string,
+  newMessage: string
+): Promise<void | null> => {
+  const user = await getCurrentUser();
+  const uid = user?.uid;
+  if (!uid) return null;
+  await updateDoc(doc(db, "requests", requestId), {
+    message: newMessage,
   });
 };
 

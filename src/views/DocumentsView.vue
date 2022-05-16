@@ -71,12 +71,15 @@
         </fieldset>
       </div>
       <h3>これまでのリクエスト一覧</h3>
-      <request-budge-vue
-        v-for="req in requestList"
-        :key="req.id"
-        :request="req"
-        @delete-record="deleteRequest"
-      />
+      <div class="request-container">
+        <request-budge-vue
+          v-for="req in requestList"
+          :key="req.id"
+          :request="req"
+          @modify-request="modifyRequest"
+          @delete-request="deleteRequest"
+        />
+      </div>
     </template>
   </div>
 </template>
@@ -95,6 +98,7 @@ import {
   getRequestByUserAndTarget,
   createRequestToFirestore,
   deleteRequestFromFirestore,
+  updateRequest,
 } from "@/composables/request-record-operations";
 import RequestBudgeVue from "@/components/RequestBudge.vue";
 
@@ -153,6 +157,26 @@ export default defineComponent({
         newRequestMessage.value = "";
       }
     };
+
+    const modifyRequest = async (id: string) => {
+      const modifiedReq = requestList.value.find((req) => {
+        return req.id === id;
+      });
+      if (modifiedReq === undefined) {
+        alert("修正できません。");
+        return;
+      }
+      const modifiedMessage = window.prompt(
+        "メッセージを修正してください。",
+        modifiedReq.message
+      );
+      if (modifiedMessage !== null && modifiedMessage !== "") {
+        if (confirm("以下の内容を登録しますか？" + `\n${modifiedMessage}`)) {
+          await updateRequest(id, modifiedMessage);
+          modifiedReq.message = modifiedMessage;
+        }
+      }
+    };
     const deleteRequest = async (id: string) => {
       if (confirm("削除しますか？")) {
         await deleteRequestFromFirestore(id);
@@ -173,6 +197,7 @@ export default defineComponent({
       requestList,
       newRequestType,
       newRequestMessage,
+      modifyRequest,
       requestTypeStr,
       downloadDocument,
       openFileAsNewTab,
@@ -275,6 +300,14 @@ fieldset.add-request-form-field {
       background-color: rgba(0, 0, 0, 0.1);
       backdrop-filter: blur(1.5rem);
     }
+  }
+}
+
+.request-container {
+  display: grid;
+  grid-template-columns: repeat(3, 3fr);
+  @include mediaquery(small-size) {
+    grid-template-columns: 1fr;
   }
 }
 </style>

@@ -8,7 +8,7 @@
     </div>
     <template v-if="$props.request.status === 0">
       <div class="button-container">
-        <button disabled>修正する</button>
+        <button @click="modifyRequest">修正する</button>
         <button @click="deleteRequest">取り消す</button>
       </div>
     </template>
@@ -26,7 +26,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["delete-record"],
+  emits: ["modify-request", "delete-request"],
 
   setup(props, context) {
     const statusMessage = computed((): string => {
@@ -44,11 +44,14 @@ export default defineComponent({
       }
     });
 
+    const modifyRequest = () => {
+      context.emit("modify-request", props.request.id);
+    };
     const deleteRequest = () => {
-      context.emit("delete-record", props.request.id);
+      context.emit("delete-request", props.request.id);
     };
 
-    return { statusMessage, deleteRequest };
+    return { statusMessage, deleteRequest, modifyRequest };
   },
 });
 </script>
