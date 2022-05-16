@@ -1,8 +1,8 @@
 <template>
   <div class="contents-home">
     <h1>コンテンツ一覧</h1>
-    <p>全部で{{ allDocumentNum }}件の文書があります。</p>
-    <div class="document-list-container">
+    <!-- <p>全部で{{ allDocumentNum }}件の文書があります。</p> -->
+    <div class="documents-list-container">
       <contents-list-item-vue
         v-for="doc in documentList"
         :key="doc.urlStr"
@@ -43,4 +43,14 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/assets/css/mixins.scss";
+.documents-list-container {
+  display: grid;
+  grid-template-columns: repeat(3, 3fr);
+  margin: 2rem 3%;
+  @include mediaquery(small-size) {
+    grid-template-columns: repeat(2, 2fr);
+  }
+}
+</style>
