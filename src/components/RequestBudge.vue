@@ -72,7 +72,7 @@ export default defineComponent({
 
   .button-container {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 
     button {
       margin: 0.3rem 0.5rem;
