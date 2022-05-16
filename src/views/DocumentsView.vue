@@ -83,9 +83,11 @@ import {
   openFileAsNewTab,
 } from "@/composables/download-file";
 import { DocumentRequest, requestTypeStr } from "@/modules/document-requests";
-import { getRequestByUserAndTarget } from "@/composables/get-request";
-import { createRequestToFirestore } from "@/composables/create-request-record";
-import { deleteRequestFromFirestore } from "@/composables/delete-request-record";
+import {
+  getRequestByUserAndTarget,
+  createRequestToFirestore,
+  deleteRequestFromFirestore,
+} from "@/composables/request-record-operations";
 import RequestBudgeVue from "@/components/RequestBudge.vue";
 
 interface State {
@@ -129,6 +131,9 @@ export default defineComponent({
     });
 
     const addRequest = async () => {
+      if (newRequestType.value !== 2 && newRequestMessage.value === "") {
+        alert("修正依頼または意見を送る場合はメッセージが必須です。");
+      }
       const addedRequest = await createRequestToFirestore(
         newRequestType.value,
         props.urlStr,
