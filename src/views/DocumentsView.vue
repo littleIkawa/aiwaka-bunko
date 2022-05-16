@@ -209,6 +209,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/assets/css/mixins.scss";
 
+h1 {
+  font-size: 3.2rem;
+}
+
 .button-container {
   margin: 1.2rem 1rem;
 }

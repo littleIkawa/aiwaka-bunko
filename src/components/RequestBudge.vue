@@ -1,14 +1,17 @@
 <template>
   <div class="request-budge">
     <div class="status-message">
-      {{ $props.request.getTypeStr() }}：{{ statusMessage }}
+      <span>{{ $props.request.getTypeStr() }}</span>
+      <span v-if="$props.request.type !== 2">：{{ statusMessage }}</span>
     </div>
     <div class="request-message">
       {{ $props.request.message }}
     </div>
     <template v-if="$props.request.status === 0">
       <div class="button-container">
-        <button @click="modifyRequest">修正する</button>
+        <button @click="modifyRequest" v-if="$props.request.type !== 2">
+          修正する
+        </button>
         <button @click="deleteRequest">取り消す</button>
       </div>
     </template>
