@@ -46,6 +46,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/contents/:urlStr",
     component: () => import("../views/DocumentsView.vue"),
+    meta: {
+      requiresAuth: true,
+    },
     props: true,
   },
 ];
