@@ -8,11 +8,12 @@ export const requestTypeStr = [
   "その他",
 ];
 
-export class Request {
+export class DocumentRequest {
   constructor(
     public id: string,
     public uid: string,
     public type: number,
+    public target: string,
     public time: Timestamp,
     public message: string,
     public status: number
