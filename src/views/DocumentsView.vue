@@ -16,12 +16,20 @@
         </ul>
       </template>
       <h2>ダウンロード</h2>
-      <button class="download-button" @click="openFileAsNewTab($props.urlStr)">
-        新しいタブで開く
-      </button>
-      <button class="download-button" @click="downloadDocument($props.urlStr)">
-        ダウンロード
-      </button>
+      <div class="button-container">
+        <button
+          class="download-button"
+          @click="openFileAsNewTab($props.urlStr)"
+        >
+          新しいタブで開く
+        </button>
+        <button
+          class="download-button"
+          @click="downloadDocument($props.urlStr)"
+        >
+          ダウンロード
+        </button>
+      </div>
 
       <h2>リクエスト</h2>
       <p>
@@ -176,10 +184,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "@/assets/css/mixins.scss";
 
+.button-container {
+  margin: 1.2rem 1rem;
+}
 .download-button {
-  padding: 1rem 2rem;
+  padding: 0.5rem 0.8rem;
   border: 2px solid rgb(100, 200, 255);
-  border-radius: 12px;
+  border-radius: 8px;
   transition: 0.25s ease-out;
   &:hover {
     color: #333333;

@@ -50,6 +50,7 @@ export default defineComponent({
 
   &__title-block {
     display: flex;
+    margin: 0.2rem 2rem;
   }
   &__logo {
     object-fit: scale-down;
@@ -63,7 +64,7 @@ export default defineComponent({
   &__title {
     font-family: "Noto Serif JP", serif;
     font-size: $title-height;
-    line-height: 8rem;
+    line-height: $header-height;
   }
 }
 
