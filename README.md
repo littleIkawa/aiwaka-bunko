@@ -7,6 +7,27 @@
 
 <a href="https://aiwaka-bunko.web.app">https://aiwaka-bunko.web.app</a>にデプロイしています。
 
+## 仕様
+
+- メールアドレスを利用して登録・ログイン（Firebase Authentication）.
+- 登録にはさらにアクセスコードが必要.
+- リモートストレージに置いてある PDF をダウンロードできる.
+- 携帯端末でも見やすい.
+- ストレージにおけるファイル名と URL を一致させるという制限で動的ルーティングを用いることでコード量の削減と保守性の向上がなされている.
+- ダウンロードの動作を二種類用意することで様々な環境で閲覧できるようにしている.
+- リクエスト機能により筆者に意見を送ることができる.
+- リクエストの修正・削除等も簡単にできる.
+- リクエストが受理されたかどうかもひと目で分かるようになっている.
+
+## ギャラリー
+
+<p>
+<img width="25%" alt="コンテンツ一覧（モバイル）" src="https://user-images.githubusercontent.com/38373453/172040212-f51934ba-b375-4a81-8674-22ecd9cd2cb1.jpg">
+<img width="65%" alt="コンテンツ一覧（PC）" src="https://user-images.githubusercontent.com/38373453/172039948-60c5db65-f0b2-4092-9b8d-dd1fc45cff29.png">
+<img width="95%" alt="コンテンツ" src="https://user-images.githubusercontent.com/38373453/172040144-a214a96f-9766-4bbe-a7cc-32dc6fd7f0e1.png">
+<img width="95%" alt="修正リクエスト" src="https://user-images.githubusercontent.com/38373453/172040169-cc949ded-e3dc-4fb9-85a0-ad8320be6a01.png">
+</p>
+
 ## 技術的概要
 
 <table>
