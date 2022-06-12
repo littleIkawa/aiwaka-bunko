@@ -42,28 +42,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { defineComponent, onMounted, reactive } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "@/settings/firebase";
 import { getUserName } from "@/composables/user-record-operations";
 
 interface State {
-  userEmail: string;
-  password: string;
   errorMessage: string;
   loggedIn: boolean;
   loginUserName: string;
+  password: string;
+  userEmail: string;
 }
 
 export default defineComponent({
   setup() {
     const state = reactive<State>({
-      userEmail: "",
-      password: "",
       errorMessage: "",
       loggedIn: false,
       loginUserName: "",
+      password: "",
+      userEmail: "",
     });
     const router = useRouter();
     const route = useRoute();

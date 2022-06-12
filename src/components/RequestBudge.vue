@@ -1,5 +1,5 @@
 <template>
-  <div class="request-budge">
+  <div class="request-budge" :class="cssClassFromStatus">
     <div class="status-message">
       <span>{{ $props.request.getTypeStr() }}</span>
       <span v-if="$props.request.type !== 2">：{{ statusMessage }}</span>
@@ -7,29 +7,31 @@
     <div class="request-message">
       {{ $props.request.message }}
     </div>
-    <template v-if="$props.request.status === 0">
-      <div class="button-container">
+    <div class="button-container">
+      <template v-if="$props.request.status === 0">
         <button @click="modifyRequest" v-if="$props.request.type !== 2">
           修正する
         </button>
+      </template>
+      <template v-if="$props.request.status !== 1">
         <button @click="deleteRequest">取り消す</button>
-      </div>
-    </template>
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import { DocumentRequest } from "@/modules/document-requests";
 
 export default defineComponent({
   props: {
     request: {
-      type: DocumentRequest,
+      type: Object as PropType<DocumentRequest>,
       required: true,
     },
   },
-  emits: ["modify-request", "delete-request"],
+  emits: ["delete-request", "modify-request"],
 
   setup(props, context) {
     const statusMessage = computed((): string => {
@@ -54,19 +56,39 @@ export default defineComponent({
       context.emit("delete-request", props.request.id);
     };
 
-    return { statusMessage, deleteRequest, modifyRequest };
+    const cssClassFromStatus = computed(() => {
+      if (props.request.status === 1) {
+        return "accepted";
+      } else if (props.request.status === 2) {
+        return "rejected";
+      } else {
+        return "on-hold";
+      }
+    });
+
+    return { cssClassFromStatus, deleteRequest, modifyRequest, statusMessage };
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .request-budge {
+  display: flex;
+  flex-direction: column;
   border: 1px solid rgba(0, 0, 0, 0.4);
   border-radius: 10px;
   padding: 0.8rem 1.6rem;
   margin: 0.7rem 1rem;
   width: 30rem;
-  background-color: rgba($color: rgb(35, 98, 245), $alpha: 0.2);
+  &.on-hold {
+    background-color: rgba($color: rgb(35, 98, 245), $alpha: 0.2);
+  }
+  &.accepted {
+    background-color: rgba($color: rgb(76, 248, 49), $alpha: 0.2);
+  }
+  &.rejected {
+    background-color: rgba($color: rgb(249, 34, 34), $alpha: 0.2);
+  }
 
   .status-message {
     margin: 0.2rem auto;
@@ -77,6 +99,7 @@ export default defineComponent({
   }
 
   .button-container {
+    margin-top: auto;
     display: flex;
     justify-content: flex-end;
 

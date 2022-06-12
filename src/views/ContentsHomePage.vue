@@ -13,23 +13,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs } from "vue";
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
 import { DocumentContent } from "@/modules/document-content";
 import { getAllContents } from "@/composables/get-contents";
 import ContentsListItemVue from "@/components/ContentsListItem.vue";
 
 interface State {
-  documentList: DocumentContent[];
   allDocumentNum: number;
+  documentList: DocumentContent[];
 }
 
 export default defineComponent({
   components: { ContentsListItemVue },
   setup() {
-    const { documentList, allDocumentNum } = toRefs(
+    const { allDocumentNum, documentList } = toRefs(
       reactive<State>({
-        documentList: [],
         allDocumentNum: 0,
+        documentList: [],
       })
     );
     onMounted(() => {
@@ -38,7 +38,7 @@ export default defineComponent({
       });
     });
 
-    return { documentList, allDocumentNum };
+    return { allDocumentNum, documentList };
   },
 });
 </script>
