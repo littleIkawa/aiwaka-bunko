@@ -43,14 +43,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { defineComponent, onMounted, reactive } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { validators } from "@/modules/validations";
 import { auth } from "@/settings/firebase";
 import {
-  getUserName,
   createUserRecord,
+  getUserName,
 } from "@/composables/user-record-operations";
 
 interface FormSchema {
@@ -62,17 +62,17 @@ interface FormSchema {
 }
 
 interface State {
+  errorMessage: string;
+  loggedIn: boolean;
   newUserName: string;
   newUserBelongs: string;
   newUserEmail: string;
   newUserPassword: string;
-  errorMessage: string;
-  loggedIn: boolean;
 }
 
 const validateForm = (values: FormSchema): boolean => {
   // フォーム項目と適用するバリデーションを並べる.
-  let validationSchema = [
+  const validationSchema = [
     { prop: "name", type: "required" },
     { prop: "belongs", type: "required" },
     { prop: "email", type: "required" },
@@ -91,12 +91,12 @@ const validateForm = (values: FormSchema): boolean => {
 export default defineComponent({
   setup() {
     const state = reactive<State>({
+      errorMessage: "",
+      loggedIn: false,
       newUserName: "",
       newUserBelongs: "",
       newUserEmail: "",
       newUserPassword: "",
-      errorMessage: "",
-      loggedIn: false,
     });
     const router = useRouter();
     const route = useRoute();

@@ -21,17 +21,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import { DocumentRequest } from "@/modules/document-requests";
 
 export default defineComponent({
   props: {
     request: {
-      type: DocumentRequest,
+      type: Object as PropType<DocumentRequest>,
       required: true,
     },
   },
-  emits: ["modify-request", "delete-request"],
+  emits: ["delete-request", "modify-request"],
 
   setup(props, context) {
     const statusMessage = computed((): string => {
@@ -66,7 +66,7 @@ export default defineComponent({
       }
     });
 
-    return { cssClassFromStatus, statusMessage, deleteRequest, modifyRequest };
+    return { cssClassFromStatus, deleteRequest, modifyRequest, statusMessage };
   },
 });
 </script>

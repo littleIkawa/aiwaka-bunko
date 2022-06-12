@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed, toRefs, reactive } from "vue";
+import { computed, defineComponent, onMounted, reactive, toRefs } from "vue";
 
 import { DocumentContent } from "@/modules/document-content";
 import { getOneContent } from "@/composables/get-contents";
@@ -95,18 +95,18 @@ import {
 } from "@/composables/download-file";
 import { DocumentRequest, requestTypeStr } from "@/modules/document-requests";
 import {
-  getRequestByUserAndTarget,
   createRequestToFirestore,
   deleteRequestFromFirestore,
+  getRequestByUserAndTarget,
   updateRequest,
 } from "@/composables/request-record-operations";
 import RequestBudgeVue from "@/components/RequestBudge.vue";
 
 interface State {
   documentItem: DocumentContent | null;
-  requestList: DocumentRequest[];
-  newRequestType: number;
   newRequestMessage: string;
+  newRequestType: number;
+  requestList: DocumentRequest[];
 }
 
 export default defineComponent({
@@ -120,13 +120,13 @@ export default defineComponent({
   },
 
   setup(props) {
-    const { documentItem, requestList, newRequestType, newRequestMessage } =
+    const { documentItem, newRequestMessage, newRequestType, requestList } =
       toRefs(
         reactive<State>({
           documentItem: null,
-          requestList: [],
-          newRequestType: 0,
           newRequestMessage: "",
+          newRequestType: 0,
+          requestList: [],
         })
       );
     onMounted(async () => {
@@ -159,21 +159,21 @@ export default defineComponent({
     };
 
     const modifyRequest = async (id: string) => {
-      const modifiedReq = requestList.value.find((req) => {
+      const modifyingReq = requestList.value.find((req) => {
         return req.id === id;
       });
-      if (modifiedReq === undefined) {
+      if (modifyingReq === undefined) {
         alert("修正できません。");
         return;
       }
       const modifiedMessage = window.prompt(
         "メッセージを修正してください。",
-        modifiedReq.message
+        modifyingReq.message
       );
       if (modifiedMessage !== null && modifiedMessage !== "") {
         if (confirm("以下の内容を登録しますか？" + `\n${modifiedMessage}`)) {
           await updateRequest(id, modifiedMessage);
-          modifiedReq.message = modifiedMessage;
+          modifyingReq.message = modifiedMessage;
         }
       }
     };
@@ -194,13 +194,13 @@ export default defineComponent({
       addRequest,
       deleteRequest,
       documentItem,
-      requestList,
-      newRequestType,
-      newRequestMessage,
-      modifyRequest,
-      requestTypeStr,
       downloadDocument,
+      modifyRequest,
+      newRequestMessage,
+      newRequestType,
       openFileAsNewTab,
+      requestList,
+      requestTypeStr,
     };
   },
 });
